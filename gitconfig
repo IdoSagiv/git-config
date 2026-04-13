@@ -1,0 +1,40 @@
+[user]
+        name = Ido Sagiv
+        email = idos@hailo.ai
+[alias]
+        co = checkout
+        cod = checkout develop
+        nb = checkout -b
+        c = commit
+        cam = commit -am
+        cb = rev-parse --abbrev-ref HEAD
+        cc = rev-parse HEAD
+        cp = cherry-pick
+        f = fetch
+        proc = !git pull --rebase origin $(git bc)
+        po = pull origin
+        pod = pull origin develop
+        st = status
+        pp = pull --prune
+        uncommit = reset HEAD^
+        delete-branch = push origin --delete
+        pushu = "!git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
+[push]
+        default = upstream
+	autoSetupRemote = true
+[core]
+        pager = delta
+[interactive]
+        diffFilter = delta --color-only
+[delta]
+        navigate = true
+        line-numbers = true
+        syntax-theme = Catppuccin Mocha
+        side-by-side = true
+[merge]
+        conflictstyle = diff3
+[diff]
+        colorMoved = default
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
