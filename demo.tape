@@ -14,7 +14,6 @@ Set TypingSpeed  50ms
 Set PlaybackSpeed 1.0
 
 # === Setup (hidden) ==========================================================
-# Create a temp git repo so we can show real git output without leaking info.
 Hide
 Type "cat > /tmp/vhsdemo-rc <<'EOF'" Enter
 Type "PS1='\[\033[1;36m\]❯\[\033[0m\] '" Enter
@@ -27,31 +26,26 @@ Type "cd /tmp && rm -rf vhsdemo-repo && mkdir vhsdemo-repo && cd vhsdemo-repo &&
 Sleep 300ms
 Type "git config user.email 'demo@example.com'" Enter
 Sleep 200ms
-# Create some files and commits for a realistic history
-Type "echo 'hello world' > README.md && git add README.md && git commit -m 'Initial commit'" Enter
+Type "printf '# My Project\n\nA sample project.\n\n## Getting Started\n\nRun the app:\n\n  ./start.sh\n\n## License\n\nMIT\n' > README.md && git add README.md && git commit -m 'Initial commit'" Enter
 Sleep 300ms
-Type "echo 'second line' >> README.md && git add README.md && git commit -m 'Update readme'" Enter
-Sleep 300ms
-Type "echo 'function main() {}' > app.js && git add app.js && git commit -m 'Add app entry point'" Enter
+Type "echo 'function main() {}' > app.js && git add . && git commit -m 'Add app entry point'" Enter
 Sleep 300ms
 Type "clear" Enter
 Sleep 300ms
 Show
 
-# === Show aliases — status ====================================================
+# === Aliases: status, branch name, new branch ================================
 Sleep 500ms
 Type "# git st = status" Enter
 Sleep 400ms
 Type "git st" Enter
 Sleep 800ms
 
-# === Show aliases — branch name ===============================================
 Type "# git cb = current branch name" Enter
 Sleep 400ms
 Type "git cb" Enter
 Sleep 800ms
 
-# === Show aliases — new branch ================================================
 Type "# git nb = new branch" Enter
 Sleep 400ms
 Type "git nb feature/demo" Enter
@@ -59,15 +53,14 @@ Sleep 600ms
 Type "git cb" Enter
 Sleep 800ms
 
-# === Show aliases — commit shorthand ==========================================
-Type "echo 'new feature' > feature.txt" Enter
+# === Aliases: commit and uncommit =============================================
+Type "echo 'console.log(hello)' >> app.js" Enter
 Sleep 300ms
 Type "# git cam = commit -am (add + commit with message)" Enter
 Sleep 400ms
-Type "git cam 'Add new feature'" Enter
+Type "git cam 'Add hello log'" Enter
 Sleep 800ms
 
-# === Show aliases — uncommit ==================================================
 Type "# git uncommit = soft reset last commit" Enter
 Sleep 400ms
 Type "git uncommit" Enter
@@ -75,38 +68,48 @@ Sleep 500ms
 Type "git st" Enter
 Sleep 800ms
 
-# === Re-commit for diff demo =================================================
+# === Delta side-by-side diff ==================================================
+# Hidden: recommit, edit README, clear screen
 Hide
-Type "git cam 'Add new feature'" Enter
+Type "git cam 'Add hello log'" Enter
+Sleep 300ms
+Type "sed -i 's/A sample project./A demo project showcasing git aliases./' README.md" Enter
+Sleep 200ms
+Type "sed -i 's/Run the app:/Install and run:/' README.md" Enter
+Sleep 200ms
+Type "sed -i 's|./start.sh|git clone repo \&\& ./start.sh|' README.md" Enter
+Sleep 200ms
+Type "clear" Enter
 Sleep 300ms
 Show
 
-# === Delta side-by-side diff ==================================================
+Sleep 300ms
 Type "# delta pager — side-by-side, line numbers, Catppuccin Mocha" Enter
 Sleep 400ms
-Type "sed -i 's/new feature/improved feature/' feature.txt" Enter
-Sleep 300ms
 Type "git diff" Enter
-Sleep 1500ms
+Sleep 3000ms
+
+# === Git log ==================================================================
+# Hidden: quit pager (if any) and clear for clean log output
+Hide
 Type "q"
-Sleep 500ms
+Sleep 300ms
+Enter
+Sleep 300ms
+Type "git checkout -- ." Enter
+Sleep 300ms
+Type "clear" Enter
+Sleep 300ms
+Show
 
-# === Delta for git log ========================================================
+Sleep 300ms
 Type "git log --oneline" Enter
-Sleep 1200ms
+Sleep 1500ms
 
-# === Show aliases — checkout back =============================================
+# === Checkout =================================================================
 Type "# git co = checkout" Enter
 Sleep 400ms
 Type "git co main" Enter
-Sleep 800ms
-
-# === Prune fetch ==============================================================
-Type "# git pp = pull --prune" Enter
-Sleep 400ms
-Type "# git f  = fetch" Enter
-Sleep 400ms
-Type "# git po = pull origin <branch>" Enter
 Sleep 800ms
 
 # === Alias cheat sheet ========================================================
