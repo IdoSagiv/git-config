@@ -1,6 +1,6 @@
 [user]
         name = Ido Sagiv
-        email = idos@hailo.ai
+        # email = <set locally per machine>
 [alias]
         co = checkout
         cod = checkout develop
