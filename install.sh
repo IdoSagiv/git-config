@@ -4,6 +4,47 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 
+# ── Install dependencies ────────────────────────────────────────────────────
+install_deps() {
+    echo "Checking dependencies..."
+    local installed=() skipped=()
+
+    # delta
+    if command -v delta &>/dev/null; then
+        skipped+=("delta (already installed)")
+    else
+        echo "Installing delta..."
+        local delta_version="0.18.2"
+        local delta_deb="git-delta_${delta_version}_amd64.deb"
+        curl -fsSL "https://github.com/dandavison/delta/releases/download/${delta_version}/${delta_deb}" -o "/tmp/${delta_deb}"
+        sudo dpkg -i "/tmp/${delta_deb}"
+        rm -f "/tmp/${delta_deb}"
+        installed+=("delta")
+    fi
+
+    # gh (GitHub CLI)
+    if command -v gh &>/dev/null; then
+        skipped+=("gh (already installed)")
+    else
+        echo "Installing gh..."
+        sudo mkdir -p -m 755 /etc/apt/keyrings
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+        sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli-stable.list >/dev/null
+        sudo apt-get update -qq && sudo apt-get install -y -qq gh
+        installed+=("gh")
+    fi
+
+    echo ""
+    if [ ${#installed[@]} -gt 0 ]; then
+        echo "Installed: ${installed[*]}"
+    fi
+    if [ ${#skipped[@]} -gt 0 ]; then
+        echo "Skipped:   ${skipped[*]}"
+    fi
+    echo ""
+}
+
 # ── Uninstall ────────────────────────────────────────────────────────────────
 if [[ "${1:-}" == "--uninstall" ]]; then
     echo "Uninstalling git-config..."
@@ -24,6 +65,12 @@ if [[ "${1:-}" == "--uninstall" ]]; then
 fi
 
 # ── Install ──────────────────────────────────────────────────────────────────
+
+# Install dependencies if requested
+if [[ "${1:-}" == "--with-deps" ]]; then
+    install_deps
+fi
+
 echo "Installing git-config from $REPO_DIR ..."
 
 # Back up and symlink ~/.gitconfig

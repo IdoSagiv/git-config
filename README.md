@@ -15,6 +15,12 @@ cd ~/git-config
 The installer symlinks config files into place.
 Any existing `~/.gitconfig` or `~/.config/git/ignore` is backed up to `<file>.bak.<timestamp>`.
 
+To also install dependencies (delta, gh):
+
+```sh
+./install.sh --with-deps
+```
+
 To remove:
 
 ```sh
